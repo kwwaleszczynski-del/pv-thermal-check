@@ -182,6 +182,13 @@ function render() {
       hoverlabel: { bgcolor: t.surface, bordercolor: t.axis, font: { color: t.ink } },
       xaxis: axis(t, lay.xaxis), yaxis: axis(t, lay.yaxis),
     });
+    if (window.innerWidth < 640) {
+      // phones: slanted, smaller x labels (categories collide otherwise) and the legend below the axis title
+      layout.xaxis = Object.assign({}, layout.xaxis, { tickangle: -45, tickfont: Object.assign({}, layout.xaxis.tickfont, { size: 9.5 }) });
+      layout.yaxis = Object.assign({}, layout.yaxis, { tickfont: Object.assign({}, layout.yaxis.tickfont, { size: 9.5 }) });
+      layout.legend = Object.assign({}, layout.legend, { y: -0.45, yanchor: "top" });
+      layout.margin = Object.assign({}, layout.margin, { b: 56 });
+    }
     Plotly.react(el, fig.data, layout, { responsive: true, displaylogo: false });
   }
 }
