@@ -18,9 +18,9 @@ Interactive dashboard: **https://kwwaleszczynski-del.github.io/pv-thermal-check/
 
 ![Voc thermometry](docs/img/voc_thermometry.png)
 
-*During a 12-day inverter outage the array sat at open circuit, and the DC voltage channel recorded the string
-open-circuit voltage. Converted to cell temperature (blue) it shows the cells running about 19 K hotter than the
-back-of-module sensor (orange) in full sun: the sensor sees about half of the real heating.*
+*During the first 12 days of a 34-day inverter outage the array sat at open circuit, and the DC voltage channel
+recorded the string open-circuit voltage. Converted to cell temperature (blue) it shows the cells running about
+19 K hotter than the back-of-module sensor (orange) in full sun: the sensor sees about half of the real heating.*
 
 ## Key results
 
@@ -110,7 +110,9 @@ Coefficients are fitted by robust least squares on 2017 and scored on 2016, on o
 
 ## 3. Is the sensor right? Open-circuit voltage thermometry
 
-From 4 to 16 June 2016 the inverter was down (error code 139 later) while the DC voltage channel kept logging.
+From 4 to 16 June 2016 the inverter was down while the DC voltage channel kept logging; after that its channels
+went missing until it came back on 8 July (first error code on 14 June; the full course is in the shared
+[PVDAQ site notes](https://github.com/kwwaleszczynski-del/pv-outage-classifier/blob/main/PVDAQ_SITE_NOTES.md)).
 At open circuit no current flows, so there is no wiring drop, and the string voltage is 13 × the module Voc, which
 depends on cell temperature through the datasheet coefficient (−0.123 V/K per module) and only logarithmically on
 irradiance. This is the idea behind the equivalent cell temperature of IEC 60904-5:
@@ -173,7 +175,8 @@ level stays comparable with the raw PR.
   booked as something else.
 - **The correction removes the seasonal artefact** (operating steps, sun above 30° to keep the winter row shading
   out): the monthly spread drops from 13.1 pp to 6.3 pp (PR<sub>25</sub>) and 4.8 pp (PR<sub>NREL</sub>), and the
-  correlation with cell temperature from −0.91 to +0.43.
+  correlation with cell temperature goes from −0.91 to +0.65 (PR<sub>25</sub>) and +0.43 (PR<sub>NREL</sub>):
+  both corrections overshoot a little, PR<sub>25</sub> more.
 - The faulty sensor corrects the season almost as well (4.8 pp), because the seasonal swing of cell temperature is
   mostly the swing of air temperature, which the sensor follows. It gets the level wrong, not the shape.
 - What is left is a winter dip and an autumn decline. The first matches the inter-row shading found in
