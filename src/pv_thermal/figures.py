@@ -111,6 +111,7 @@ def fig_voc(res, path: Path) -> Path:
     a1.plot(loc, df["t_mod"], color=SENSOR, lw=1.5, label="back-of-module sensor")
     a1.plot(loc, df["ta"], color=INK2, lw=1.5, label="air (airport)")
     a1.set_ylabel("degC")
+    a1.xaxis.set_major_locator(mdates.DayLocator())  # one tick per day (the default put two per day, same label)
     a1.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
     a1.set_title("Inverter down, array at open circuit: June 2016")
     a1.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=3, fontsize=9)
@@ -121,7 +122,7 @@ def fig_voc(res, path: Path) -> Path:
     a2.set_xlabel("POA irradiance, W/m2 (clear-sky scale)")
     a2.set_ylabel("rise over air, K")
     a2.set_title(f"Sensor reports {100 * s['sensor_gain']:.0f} % of the cell's rise")
-    a2.legend(loc="upper left")
+    a2.legend(loc="lower right")  # empty corner: high irradiance, no rise below air
     fig.tight_layout()
     return _save(fig, path)
 
@@ -176,7 +177,7 @@ def fig_faults(res, path: Path) -> Path:
     a2.set_xlim(pd.Timestamp("2016-01-15"), pd.Timestamp("2016-04-15"))
     a2.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
     a2.set_title("Injected fault: rise x 0.6 from 1 March 2016")
-    a2.legend(loc="lower left", fontsize=9)
+    a2.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=1, fontsize=9)  # below the axis, off the data
     names = {"offset_plus": "+3 K", "offset_minus": "-3 K", "drift": "drift 4.5 K/90 d", "detached": "loose x0.6",
              "ventilation": "ventilation x1.3"}
     y = np.arange(len(t))
@@ -187,9 +188,9 @@ def fig_faults(res, path: Path) -> Path:
                 f"{100 * d:.0f}% / {100 * sd:.0f}%", va="center", fontsize=8, color=INK2)
     a3.set_yticks(y, [names[f] for f in t["fault"]])
     a3.invert_yaxis()
-    a3.set_xlabel("median days to alarm  (right: share found within 60 d, CUSUM / baseline)")
+    a3.set_xlabel("median days to alarm\n(right: share found within 60 d, CUSUM / baseline)")
     a3.set_title("Detection on 40 start dates (2016)")
-    a3.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=1, fontsize=8)
+    a3.legend(loc="upper center", bbox_to_anchor=(0.5, -0.27), ncol=1, fontsize=8)  # below the two-line label
     fig.tight_layout()
     return _save(fig, path)
 
@@ -211,6 +212,7 @@ def fig_inverter(res, path: Path) -> Path:
     a2.axvspan(pd.Timestamp("2016-06-04"), pd.Timestamp("2016-07-08"), color=GRID, lw=0)
     a2.text(pd.Timestamp("2016-06-20"), mo.max() * 0.95, "outage", ha="center", fontsize=8, color=INK2)
     a2.set_ylabel("measured - model, K (monthly)")
+    a2.xaxis.set_major_locator(mdates.MonthLocator(bymonth=(1, 7)))  # quarterly labels nearly touched
     a2.xaxis.set_major_formatter(mdates.DateFormatter("%b %y"))
     a2.set_title(f"After the July 2016 repair: {s['residual_after_jul2016'] - s['residual_before_jun2016']:+.1f} K")
     d = res.tables["derating_by_air_temperature"]
